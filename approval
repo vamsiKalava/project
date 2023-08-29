@@ -176,3 +176,64 @@ export default MyComponent;
         });
     </script>
 
+
+
+
+
+
+import React, { useState } from 'react';
+
+const PayrollApproval = () => {
+    const [payrollData, setPayrollData] = useState([
+        { batchNumber: '20230822', employeeName: 'John Doe', amount: '$1500', status: 'Pending' },
+        { batchNumber: '20230822', employeeName: 'Jane Smith', amount: '$2000', status: 'Approved' },
+        // ... add more payroll data here
+    ]);
+
+    const handleReject = (index) => {
+        const isConfirmed = window.confirm("Are you sure you want to reject this Payroll?");
+        if (isConfirmed) {
+            const updatedData = [...payrollData];
+            updatedData.splice(index, 1);
+            setPayrollData(updatedData);
+        }
+    };
+
+    return (
+        <div>
+            <div id="header">
+                <h1>Payroll Approval</h1>
+            </div>
+            <div className="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Batch Number</th>
+                            <th>Employee Name</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {payrollData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.batchNumber}</td>
+                                <td>{row.employeeName}</td>
+                                <td>{row.amount}</td>
+                                <td>{row.status}</td>
+                                <td>
+                                    <button className="approve-btn">Approve</button>
+                                    <button className="reject-btn" onClick={() => handleReject(index)}>Reject</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+export default PayrollApproval;
+
