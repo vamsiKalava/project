@@ -158,3 +158,21 @@ function MyComponent() {
 
 export default MyComponent;
 
+
+
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rejectButtons = document.querySelectorAll(".reject-btn");
+
+            rejectButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const row = this.closest("tr");
+                    const isConfirmed = confirm("Are you sure you want to reject this Payroll?");
+                    if (isConfirmed) {
+                        row.remove();
+                    }
+                });
+            });
+        });
+    </script>
+
