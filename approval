@@ -237,3 +237,147 @@ const PayrollApproval = () => {
 
 export default PayrollApproval;
 
+
+
+
+
+import React, { useState, useEffect } from "react";
+import fetch from "../Api's/fetch";
+import "./Style.css";
+import axios from "axios";
+const PayrollApproval = () => {
+    
+    let lst = [
+        { batchNumber: '20230822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '978', employeeName: 'Jane Smith', amount: '24000', status: 'Pending' }
+        // ... add more payroll data here
+    ]
+    const [payrollData, setPayrollData] = useState(lst);
+
+    const getProfile = (data) => {
+        const base_url = "http://localhost:8090/api";
+        axios.get(`${base_url}/customer/details`).then(
+    
+          (response) => {
+    
+            console.log(response.data[2].password);
+    
+            //console.log(data);
+    
+            // setProfile({
+    
+            //   name: response.data.name,
+    
+            //   email: response.data.email,
+    
+            //   company_id: response.data.company_id,
+    
+            //   password: response.data.password,
+    
+            //   username: response.data.username,
+    
+            //   id: response.data.id,
+    
+            //   company_name: response.data.company_name,
+    
+            // });
+    
+          },
+          (error) => {
+    
+            console.log(error);
+    
+          }
+    
+        );
+    
+      };
+    
+    
+    
+    
+      useEffect(() => {
+    
+        getProfile(); //here we have to give username from login
+    
+      }, []);
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    const handleReject = (index) => {
+        const isConfirmed = window.confirm("Are you sure you want to reject this Payroll?");
+        if (isConfirmed) {
+            const updatedData = [...payrollData];
+            updatedData.splice(index, 1);
+            setPayrollData(updatedData);
+        }
+    };
+    
+    const handlehold = (index) => {
+      const updatedData = [...payrollData];
+      if(updatedData[index].status === "Pending"){
+        updatedData[index].status = "On Hold";
+      }
+      else{
+        updatedData[index].status = "Pending"
+        
+      }
+      
+      setPayrollData(updatedData);
+    };
+
+    return (
+        <div>
+            <div id="header">
+                <h1>Payroll Approval</h1>
+            </div>
+            <div className="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Batch Number</th>
+                            <th>Employee Name</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {payrollData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.batchNumber}</td>
+                                <td>{row.employeeName}</td>
+                                <td>{row.amount}</td>
+                                <td>{row.status}</td>
+
+                                <td >
+                                    
+
+                                    <button className="approve-btn">Approve</button>
+                                    <button className ="reject-btn ms-3" onClick={() => handleReject(index)}>Reject</button>
+                                    <button className="hold-btn ms-3" onClick={() => handlehold(index)}>{row.status === 'Pending'?"  Hold ":'Unhold'}</button>
+                                
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+export default PayrollApproval;
