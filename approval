@@ -500,3 +500,80 @@ const PayrollApproval = () => {
 
 export default PayrollApproval;
 
+
+
+import React, { useState } from 'react';
+import './PayrollApproval.css'; // Make sure to import your CSS file
+
+const PayrollApproval = () => {
+    const [payrollData, setPayrollData] = useState([
+        { batchNumber: '20230822', employeeName: 'John Doe', amount: '$1500', status: 'Pending' },
+        { batchNumber: '20230822', employeeName: 'Jane Smith', amount: '$2000', status: 'Pending' },
+        // ... add more payroll data here
+    ]);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const handleApprove = () => {
+        setIsProcessing(true);
+
+        // Simulate payment processing
+        setTimeout(() => {
+            setIsProcessing(false);
+
+            // Update the status to 'Approved' or perform other actions
+            // You can access the payrollData array to update specific data
+        }, 3000); // Change the delay to your desired processing time in milliseconds
+    };
+
+    return (
+        <div>
+            <div id="header">
+                <h1>Payroll Approval</h1>
+            </div>
+            <div className="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Batch Number</th>
+                            <th>Employee Name</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {payrollData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.batchNumber}</td>
+                                <td>{row.employeeName}</td>
+                                <td>{row.amount}</td>
+                                <td>{row.status}</td>
+                                <td>
+                                    <button
+                                        className="approve-btn"
+                                        onClick={handleApprove}
+                                        disabled={isProcessing}
+                                    >
+                                        Approve
+                                    </button>
+                                    {/* Add other buttons here */}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            {isProcessing && (
+                <div className="overlay">
+                    <div className="processing-container">
+                        <h2>Processing...</h2>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default PayrollApproval;
+
+
