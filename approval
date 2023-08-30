@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
-import "./Style.css";
-
+import './Style.css';
 
 const Approval_Page = () => {
-    const [payrollData, setPayrollData] = useState([
+    const initialPayrollData = [
         { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
         { batchNumber: '978', employeeName: 'Jane Smith', amount: '24000', status: 'Pending' }
         // ... add more payroll data here
-    ]);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [isProcessed, setIsProcessed] = useState(false); // New state for "Processed" text
+    ];
+    const [payrollData, setPayrollData] = useState(initialPayrollData);
+    const [processingIndexes, setProcessingIndexes] = useState([]); // Track processing state for each row
 
-    const handleApprove = () => {
-        setIsProcessing(true);
+    const handleApprove = (index) => {
+        setProcessingIndexes(prevIndexes => [...prevIndexes, index]); // Start processing for the specific index
 
         // Simulate payment processing
         setTimeout(() => {
-            setIsProcessing(false);
-            setIsProcessed(true); // Set to true when processing is completed
-
-            // Update the status to 'Approved' or perform other actions
-            // You can access the payrollData array to update specific data
+            setProcessingIndexes(prevIndexes => prevIndexes.filter(i => i !== index)); // Finish processing for the index
+            const updatedData = [...payrollData];
+            updatedData[index].status = 'Approved';
+            setPayrollData(updatedData);
         }, 3000); // Change the delay to your desired processing time in milliseconds
     };
 
@@ -30,15 +28,9 @@ const Approval_Page = () => {
                 <h1>Payroll Approval</h1>
             </div>
             <div className="container">
-            <table>
+                <table>
                     <thead>
-                        <tr>
-                            <th>Batch Number</th>
-                            <th>Employee Name</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
+                        {/* ... table header ... */}
                     </thead>
                     <tbody>
                         {payrollData.map((row, index) => (
@@ -50,8 +42,8 @@ const Approval_Page = () => {
                                 <td>
                                     <button
                                         className="approve-btn"
-                                        onClick={handleApprove}
-                                        disabled={isProcessing}
+                                        onClick={() => handleApprove(index)}
+                                        disabled={processingIndexes.includes(index)}
                                     >
                                         Approve
                                     </button>
@@ -60,12 +52,12 @@ const Approval_Page = () => {
                             </tr>
                         ))}
                     </tbody>
-                 </table>
+                </table>
             </div>
-            {isProcessing && (
+            {processingIndexes.length > 0 && (
                 <div className="overlay">
                     <div className="processing-container">
-                        {isProcessed ? <h2>Processed</h2> : <h2>Processing...</h2>}
+                        <h2>Processing...</h2>
                     </div>
                 </div>
             )}
