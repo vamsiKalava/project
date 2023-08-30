@@ -1,16 +1,21 @@
-<div className="processing-container">
-                        {isProcessed ? <h2>Processed</h2> : <h2>Processing...</h2>}
-                    </div>
-
-
 import React, { useState } from 'react';
 import './Style.css';
 
 const Approval_Page = () => {
     const initialPayrollData = [
         { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '978', employeeName: 'Jane Smith', amount: '24000', status: 'Pending' }
-        // ... add more payroll data here
+        { batchNumber: '97ss8', employeeName: 'Jane Smith', amount: '24000', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1000', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' }
+        
     ];
     const [payrollData, setPayrollData] = useState(initialPayrollData);
     const [processingIndexes, setProcessingIndexes] = useState([]); // Track processing state for each row
@@ -27,6 +32,35 @@ const Approval_Page = () => {
         }, 3000); // Change the delay to your desired processing time in milliseconds
     };
 
+
+    const handleReject = (index) => {
+        const isConfirmed = window.confirm("Are you sure you want to reject this Payroll?");
+        if (isConfirmed) {
+            const updatedData = [...payrollData];
+            updatedData.splice(index, 1);
+            setPayrollData(updatedData);
+        }
+    };
+    
+    const handlehold = (index) => {
+      const updatedData = [...payrollData];
+      if(updatedData[index].status === "Approved"){
+        updatedData[index].status = "Approved";
+        
+      }
+      else if(updatedData[index].status === "Pending"){
+        updatedData[index].status = "On Hold";
+      }
+      else{
+        updatedData[index].status = "Pending"
+        
+      }
+      
+      setPayrollData(updatedData);
+    };
+
+
+
     return (
         <div>
             <div id="header">
@@ -35,7 +69,13 @@ const Approval_Page = () => {
             <div className="container">
                 <table>
                     <thead>
-                        {/* ... table header ... */}
+                    <tr>
+                            <th>Batch Number</th>
+                            <th>Employee Name</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {payrollData.map((row, index) => (
@@ -52,7 +92,8 @@ const Approval_Page = () => {
                                     >
                                         Approve
                                     </button>
-                                    {/* Add other buttons here */}
+                                    <button className ="reject-btn ms-3" onClick={() => handleReject(index)}>{row.status === "Approved"?"Delete":"Reject"}</button>
+                                    <button className="hold-btn ms-3" onClick={() => handlehold(index)}>{row.status === "On Hold"?"Unhold":"Hold"}</button>
                                 </td>
                             </tr>
                         ))}
@@ -61,7 +102,7 @@ const Approval_Page = () => {
             </div>
             {processingIndexes.length > 0 && (
                 <div className="overlay">
-                    <div className="processing-container">
+                    <div className="processing-container animated fadeInUp scaleIn d-flex flex-column justify-content-center">
                         <h2>Processing...</h2>
                     </div>
                 </div>
@@ -71,3 +112,5 @@ const Approval_Page = () => {
 };
 
 export default Approval_Page;
+
+
