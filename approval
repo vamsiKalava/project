@@ -3,20 +3,9 @@ import './Style.css';
 
 const Approval_Page = () => {
     const initialPayrollData = [
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '97ss8', employeeName: 'Jane Smith', amount: '24000', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1000', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
-        { batchNumber: '2822', employeeName: 'John Doe', amount: '1500', status: 'Pending' }
-        
+        // ... your initial payroll data
     ];
+
     const [payrollData, setPayrollData] = useState(initialPayrollData);
     const [processingIndexes, setProcessingIndexes] = useState([]); // Track processing state for each row
 
@@ -32,85 +21,38 @@ const Approval_Page = () => {
         }, 3000); // Change the delay to your desired processing time in milliseconds
     };
 
-
-    const handleReject = (index) => {
-        const isConfirmed = window.confirm("Are you sure you want to reject this Payroll?");
-        if (isConfirmed) {
-            const updatedData = [...payrollData];
-            updatedData.splice(index, 1);
-            setPayrollData(updatedData);
-        }
-    };
-    
-    const handlehold = (index) => {
-      const updatedData = [...payrollData];
-      if(updatedData[index].status === "Approved"){
-        updatedData[index].status = "Approved";
-        
-      }
-      else if(updatedData[index].status === "Pending"){
-        updatedData[index].status = "On Hold";
-      }
-      else{
-        updatedData[index].status = "Pending"
-        
-      }
-      
-      setPayrollData(updatedData);
-    };
-
-
-
     return (
         <div>
-            <div id="header">
-                <h1>Payroll Approval</h1>
-            </div>
-            <div className="container">
-                <table>
-                    <thead>
-                    <tr>
-                            <th>Batch Number</th>
-                            <th>Employee Name</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {payrollData.map((row, index) => (
-                            <tr key={index}>
-                                <td>{row.batchNumber}</td>
-                                <td>{row.employeeName}</td>
-                                <td>{row.amount}</td>
-                                <td>{row.status}</td>
-                                <td>
-                                    <button
-                                        className="approve-btn"
-                                        onClick={() => handleApprove(index)}
-                                        disabled={processingIndexes.includes(index)}
-                                    >
-                                        Approve
-                                    </button>
-                                    <button className ="reject-btn ms-3" onClick={() => handleReject(index)}>{row.status === "Approved"?"Delete":"Reject"}</button>
-                                    <button className="hold-btn ms-3" onClick={() => handlehold(index)}>{row.status === "On Hold"?"Unhold":"Hold"}</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            {processingIndexes.length > 0 && (
-                <div className="overlay">
-                    <div className="processing-container animated fadeInUp scaleIn d-flex flex-column justify-content-center">
-                        <h2>Processing...</h2>
-                    </div>
-                </div>
-            )}
+            {/* ... header and table content ... */}
+            {payrollData.map((row, index) => (
+                <tr key={index}>
+                    {/* ... other table cells ... */}
+                    <td>
+                        {row.status === 'Approved' ? (
+                            <p className="success-message">Successfully Approved</p>
+                        ) : (
+                            <>
+                                <button
+                                    className="approve-btn"
+                                    onClick={() => handleApprove(index)}
+                                    disabled={processingIndexes.includes(index)}
+                                >
+                                    Approve
+                                </button>
+                                <button className="reject-btn ms-3" onClick={() => handleReject(index)}>
+                                    {row.status === 'Approved' ? 'Delete' : 'Reject'}
+                                </button>
+                                <button className="hold-btn ms-3" onClick={() => handlehold(index)}>
+                                    {row.status === 'On Hold' ? 'Unhold' : 'Hold'}
+                                </button>
+                            </>
+                        )}
+                    </td>
+                </tr>
+            ))}
+            {/* ... overlay and processing container ... */}
         </div>
     );
 };
 
 export default Approval_Page;
-
-
