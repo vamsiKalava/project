@@ -381,3 +381,122 @@ const PayrollApproval = () => {
 };
 
 export default PayrollApproval;
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./PayrollApproval.css";
+
+const PayrollApproval = () => {
+    const [payrollData, setPayrollData] = useState([
+        { batchNumber: '20230822', employeeName: 'John Doe', amount: '1500', status: 'Pending' },
+        { batchNumber: '978', employeeName: 'Jane Smith', amount: '24000', status: 'Pending' }
+    ]);
+    const [processingIndex, setProcessingIndex] = useState(null);
+
+    const getProfile = () => {
+        const base_url = "http://localhost:8090/api";
+        axios.get(`${base_url}/customer/details`).then(
+            (response) => {
+                console.log(response.data[2].password);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
+    };
+
+    useEffect(() => {
+        getProfile();
+    }, []);
+
+    const handleApprove = async (index) => {
+        setProcessingIndex(index);
+        
+        try {
+            // Simulate payment processing or perform API call here
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
+            const updatedData = [...payrollData];
+            updatedData[index].status = 'Approved';
+            setPayrollData(updatedData);
+        } catch (error) {
+            console.error("Error during payment processing:", error);
+        } finally {
+            setProcessingIndex(null);
+        }
+    };
+
+    const handleReject = (index) => {
+        const isConfirmed = window.confirm("Are you sure you want to reject this Payroll?");
+        if (isConfirmed) {
+            const updatedData = [...payrollData];
+            updatedData.splice(index, 1);
+            setPayrollData(updatedData);
+        }
+    };
+
+    const handlehold = (index) => {
+        const updatedData = [...payrollData];
+        if(updatedData[index].status === "Pending"){
+            updatedData[index].status = "On Hold";
+        } else {
+            updatedData[index].status = "Pending";
+        }
+        setPayrollData(updatedData);
+    };
+
+    return (
+        <div>
+            <div id="header">
+                <h1>Payroll Approval</h1>
+            </div>
+            <div className="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Batch Number</th>
+                            <th>Employee Name</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {payrollData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.batchNumber}</td>
+                                <td>{row.employeeName}</td>
+                                <td>{row.amount}</td>
+                                <td>{row.status}</td>
+                                <td>
+                                    <button className="approve-btn" onClick={() => handleApprove(index)}>Approve</button>
+                                    <button className="reject-btn ms-3" onClick={() => handleReject(index)}>Reject</button>
+                                    <button className="hold-btn ms-3" onClick={() => handlehold(index)}>
+                                        {row.status === 'Pending' ? "Hold" : "Unhold"}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className={`processing-overlay ${processingIndex !== null ? 'active' : ''}`}>
+                <div className="processing-container">
+                    <h2>Payment Processing...</h2>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default PayrollApproval;
+
