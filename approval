@@ -665,3 +665,50 @@ body {
     backdrop-filter: blur(5px); /* Apply blur effect */
 }
 
+
+
+
+
+import React, { useState } from 'react';
+import './PayrollApproval.css'; // Make sure to import your CSS file
+
+const PayrollApproval = () => {
+    const [payrollData, setPayrollData] = useState(/* ... your data */);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [isProcessed, setIsProcessed] = useState(false); // New state for "Processed" text
+
+    const handleApprove = () => {
+        setIsProcessing(true);
+
+        // Simulate payment processing
+        setTimeout(() => {
+            setIsProcessing(false);
+            setIsProcessed(true); // Set to true when processing is completed
+
+            // Update the status to 'Approved' or perform other actions
+            // You can access the payrollData array to update specific data
+        }, 3000); // Change the delay to your desired processing time in milliseconds
+    };
+
+    return (
+        <div>
+            <div id="header">
+                <h1>Payroll Approval</h1>
+            </div>
+            <div className="container">
+                <table>
+                    {/* ... table content ... */}
+                </table>
+            </div>
+            {isProcessing && (
+                <div className="overlay">
+                    <div className="processing-container">
+                        {isProcessed ? <h2>Processed</h2> : <h2>Processing...</h2>}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default PayrollApproval;
