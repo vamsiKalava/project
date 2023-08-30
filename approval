@@ -1,3 +1,8 @@
+<div className="processing-container">
+                        {isProcessed ? <h2>Processed</h2> : <h2>Processing...</h2>}
+                    </div>
+
+
 import React, { useState } from 'react';
 import './Style.css';
 
